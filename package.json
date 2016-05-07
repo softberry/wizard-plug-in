@@ -1,0 +1,24 @@
+{
+  "name": "multi-step-form-validation-plug-in",
+  "version": "1.0.0",
+  "description": "This is a jQuery plug-in that simply converts all forms in a container a wizard type form and clinet side validation for the given values.",
+  "main": "main",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "multi",
+    "step",
+    "form",
+    "validation",
+    "jquery",
+    "plug-in"
+  ],
+  "author": "Emre Sakarya",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.5.3"
+  }
+}
