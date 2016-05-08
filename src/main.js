@@ -3,10 +3,15 @@
  */
 ;
 $(function () {
-    // the widget definition, where "custom" is the namespace,
-    // "colorize" the widget name
+    /**
+     * the widget definition, where "softberry" is the namespace,
+     * "validateWizard" the widget name
+     */
     $.widget("softberry.validateWizard", {
         // default options
+        /**
+         * @object Deafault values for the plug-in
+         */
         options: {
             sections: 'form',
             buttons: {
@@ -50,26 +55,31 @@ $(function () {
             ajax: true,
             currencySettings: {
                 currency: {
-                    symbol: "€",   // default currency symbol is '€'
-                    format: "%v %s", // controls output: %s = symbol, %v = value/number
-                    decimal: ",",  // decimal point separator
-                    thousand: ".",  // thousands separator
-                    precision: 2   // decimal places
+                    symbol: "€",        // default currency symbol is '€'
+                    format: "%v %s",    // controls output: %s = symbol, %v = value/number
+                    decimal: ",",       // decimal point separator
+                    thousand: ".",      // thousands separator
+                    precision: 2        // decimal places
                 },
                 number: {
-                    precision: 0,  // default precision on numbers is 0
-                    thousand: ".", // thousands separator
-                    decimal: "," // decimal point separator
+                    precision: 0,       // default precision on numbers is 0
+                    thousand: ".",      // thousands separator
+                    decimal: ","        // decimal point separator
                 }
             }
         },
-        step: [],        // holds each section in array
-        pwPattern: "",  // holds pattern for password validity
-        currentStep: 0, // watches current index of the sections
-        nav: {},        // holds navigation buttons
-        rawHTML: '',    // holds untouched HTML source to e used for destroying this widget
-        stepCount: null,    // holds how many sections do we have
-        data: {}, // will be prepared and collect all data in all sections to be posted to the server
+        step: [],                       // holds each section in array
+        pwPattern: "",                  // holds pattern for password validity
+        currentStep: 0,                 // watches current index of the sections
+        nav: {},                        // holds navigation buttons
+        rawHTML: '',                    // holds untouched HTML source to e used for destroying this widget
+        stepCount: null,                // holds how many sections do we have
+        data: {},                       // will be prepared and collect all data in all sections to be posted to the server
+        /**
+         * validate all fileds in current Step
+         * @returns {boolean}
+         * @private
+         */
         _validate: function () {
             // find and validate required items inside current step
             var isValid = true;
@@ -178,6 +188,12 @@ $(function () {
             );
             return isValid;
         },
+        /**
+         * validate String
+         * @param elem
+         * @returns {boolean}
+         * @private
+         */
         _validateText: function (elem) {
             /*
              * validate text input against text length
@@ -191,6 +207,12 @@ $(function () {
             var len = elem.val().length;
             return len >= min && len <= max;
         },
+        /**
+         * Validate -email address
+         * @param elem
+         * @returns {boolean}
+         * @private
+         */
         _validateMail: function (elem) {
             var max = 255;
             var min = 7;
@@ -198,6 +220,12 @@ $(function () {
             var e = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i;
             return (len >= min && len <= max) && e.test(elem.val());
         },
+        /**
+         * validate URL
+         * @param elem
+         * @returns {boolean}
+         * @private
+         */
         _validateURL: function (elem) {
             /*
              validates only if the given sting contains only allowed string
@@ -209,6 +237,12 @@ $(function () {
             var e = /^([!#$&-;=?-\[\]_a-z~]|%[0-9a-fA-F]{2})+$/;
             return (len >= min && len <= max) && e.test(elem.val());
         },
+        /**
+         * Validate Telephone number
+         * @param elem
+         * @returns {boolean}
+         * @private
+         */
         _validateTel: function (elem) {
             var max = elem.data('max') > 0 ? elem.data('max') : 255;
             var min = elem.data('min') >= 0 ? elem.data('min') : 1;
@@ -216,6 +250,12 @@ $(function () {
             var r = /^[0-9+\(\)#\.\s\/ext-]+$/ig;
             return (len >= min && len <= max) && r.test(elem.val());
         },
+        /**
+         * Validate Currency
+         * @param elem
+         * @returns {boolean}
+         * @private
+         */
         _validateNumber: function (elem) {
             var max = elem.data('max') > 0 ? elem.data('max') : 2 ^ 53 - 1;
             var min = elem.data('min') >= 0 ? elem.data('min') : -1 * (2 ^ 53 - 1);
@@ -225,6 +265,12 @@ $(function () {
             elem.val(formatted);
             return (len >= min && len <= max) && r.test(elem.val());
         },
+        /**
+         * Validate currency
+         * @param elem
+         * @returns {boolean}
+         * @private
+         */
         _validateCurrency: function (elem) {
             var max = elem.data('max') > 0 ? elem.data('max') : 2 ^ 53 - 1;
             var min = elem.data('min') >= 0 ? elem.data('min') : -1 * (2 ^ 53 - 1);
@@ -233,23 +279,53 @@ $(function () {
             elem.val(formatted);
             return asNum >= min && asNum <= max;
         },
+        /**
+         * validate password
+         * @param elem
+         * @returns {boolean}
+         * @private
+         */
         _validatePassword: function (elem) {
             var r = new RegExp(this.pwPattern, 'g');
             return r.test(elem.val());
         },
+        /**
+         * Validate radio
+         * @param elem
+         * @returns {*|jQuery}
+         * @private
+         */
         _validateRadio: function (elem) {
             var n = elem.attr('name');
             var r = this.step[this.currentStep].find(' input[name="' + n + '"]');
             var checked = $(r).is(':checked');
             return checked;
         },
+        /**
+         * validate checkbox
+         * @param elem
+         * @returns {*}
+         * @private
+         */
         _validateCheckBox: function (elem) {
             return elem.is(':checked');
         },
+        /**
+         * add|remove validity className
+         * @param elem
+         * @param valid
+         * @private
+         */
         _formatValidation: function (elem, valid) {
             var inValCls = this.options.invalidClassName;
             valid ? elem.removeClass(inValCls) : elem.addClass(inValCls);
         },
+        /**
+         *
+         * @param str
+         * @returns {*}
+         * @private
+         */
         _getUniqueID: function (str) {
             var tmpStr = str;
             while ($('#' + tmpStr).length > 0) {
@@ -257,6 +333,10 @@ $(function () {
             }
             return tmpStr;
         },
+        /**
+         * save type parameter to data-type to unify type values for all accepted elements
+         * @private
+         */
         _typeToDataType: function () {
             $(this.options.sections).find('input').each(function (e, i) {
                 var input = $(i);
@@ -334,7 +414,10 @@ $(function () {
 
             })
         },
-        // the constructor
+        /**
+         * Constructor of the Plug-In
+         * @private
+         */
         _create: function () {
             //TODO: add validation support to simple forms as one-step wizard
             var self = this;
@@ -402,9 +485,17 @@ $(function () {
             if (this.options.buttons.ui) $('button').button();
         }
         ,
-// called when created, and later when changing options
+        /**
+         * called when created, and later when changing options
+         * @private
+         */
         _refresh: function () {
         },
+        /**
+         * prepare url that will be POSTed
+         * @returns {string}
+         * @private
+         */
         _getPostToAdr:function(){
             var url =this.options.serverValidation.url;
             if (url=='') return '';
@@ -414,6 +505,10 @@ $(function () {
             return url;
         }
         ,
+        /**
+         * go to next step, if current step is valid
+         * @private
+         */
         _gotoNext: function () {
             //validate first client-side
             var self = this;
@@ -446,6 +541,10 @@ $(function () {
 
         }
         ,
+        /**
+         * go back to previous step
+         * @private
+         */
         _gotoPrev: function () {
             var self = this;
             if (this.currentStep > 0) {
@@ -468,25 +567,36 @@ $(function () {
             }
         }
         ,
+        /**
+         *
+         * @private
+         */
         _cancel: function () {
+
         }
         ,
+        /**
+         * check individual step if acceptable to go to next step or final submit
+         * @returns {boolean}
+         * @private
+         */
         _submit: function () {
             if (!this._validate()) return false;
             if (this.currentStep < this.stepCount) {
                 this._gotoNext();
                 return false;
             }
-//            console.log(JSON.stringify(this.data));
-            //var t = (JSON.stringify(this.data));
             $.post(this.postTo, this.data, function (data) {
                 alert(data)
             });
             return false;
         }
         ,
-// events bound via _on are removed automatically
-// revert other modifications here
+        /**
+         * events bound via _on are removed automatically
+         * revert other modifications here
+         * @private
+         */
         _destroy: function () {
             // remove generated elements
             //this.changer.remove();
@@ -494,15 +604,23 @@ $(function () {
 
         }
         ,
-// _setOptions is called with a hash of all options that are changing
-// always refresh when changing options
+        /**
+         * _setOptions is called with a hash of all options that are changing
+         * always refresh when changing options
+         * @private
+         */
         _setOptions: function () {
             // _super and _superApply handle keeping the right this-context
             this._superApply(arguments);
             this._refresh();
         }
         ,
-// _setOption is called for each individual option that is changing
+        /**
+         * _setOption is called for each individual option that is changing
+         * @param key   name of the option
+         * @param value value of the given option
+         * @private
+         */
         _setOption: function (key, value) {
             // check if values are suitable first
             this._super(key, value);

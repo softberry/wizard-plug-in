@@ -11,7 +11,8 @@
 + If you also need number and currency validation add *accounting.js* before *main.min.js* into your **HTML** file
 + Create Form elements in the **HTML** file and assign class="required" for each supported element inside the form. Form elements are optional and can be replaced by any html container (preferably *section* or *div*) see : `sections`
 
-*Refer to sample index.html*
+
+[Live preview of the Plug-in](http://www.emresakarya.de/wizard-plugin/)
 
 ### Default Usage
 Hide all `sections` elements inside the main selector  other then first one. According to validation rules, it allows just **one** `section` to be visible at time.

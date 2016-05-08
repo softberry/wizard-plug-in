@@ -20,5 +20,17 @@
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.5.3"
-  }
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/softberry/wizard-plug-in.git"
+  },
+  "bugs": {
+    "url": "https://github.com/softberry/wizard-plug-in/issues"
+  },
+  "homepage": "http://www.emresakarya.de/wizard-plugin/"
 }
